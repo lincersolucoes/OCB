@@ -18,6 +18,7 @@ var View = require('web.View');
 var _lt = core._lt;
 var _t = core._t;
 var QWeb = core.qweb;
+var data_length = 0.0;
 
 var PivotView = View.extend({
     events: {
@@ -100,6 +101,7 @@ var PivotView = View.extend({
         });
         if ((!this.active_measures.length) || this.fields_view.arch.attrs.display_quantity) {
             this.active_measures.push('__count__');
+            this.active_measures.push('__percent__');
         }
 
         return $.when(fields_def, xlwt_def, this._super()).then(function (fields) {
@@ -142,7 +144,7 @@ var PivotView = View.extend({
         if ($node) {
             var self = this;
 
-            var context = {measures: _.pairs(_.omit(this.measures, '__count__'))};
+            var context = {measures: _.pairs(_.omit(this.measures, '__count__', '__percent__'))};
             this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this.on_button_click.bind(this));
             this.active_measures.forEach(function (measure) {
@@ -181,6 +183,7 @@ var PivotView = View.extend({
             }
         });
         this.measures.__count__ = {string: _t("Count"), type: "integer"};
+        this.measures.__percent__ = {string: _t("Percent (%)"), type: "float"};
     },
     do_search: function (domain, context, group_by) {
         if (!this.ready) {
@@ -383,6 +386,7 @@ var PivotView = View.extend({
                         cell_value[self.active_measures[l]] = attrs.aggregates[self.active_measures[l]];
                     }
                     cell_value.__count__ = attrs.length;
+                    cell_value.__percent__ = 100 * attrs.length / data_length;
                     if (!self.cells[row.id]) self.cells[row.id] = [];
                     self.cells[row.id][col.id] = cell_value;
                 }
@@ -427,6 +431,7 @@ var PivotView = View.extend({
             row, col, attrs, datapt, cell_value,
             field;
 
+        data_length = data[0][0].attributes.length;
         for (i = 0; i < row_gbs.length + 1; i++) {
             for (j = 0; j < col_gbs.length + 1; j++) {
                 for (k = 0; k < data[index].length; k++) {
@@ -460,6 +465,7 @@ var PivotView = View.extend({
                         cell_value[this.active_measures[m]] = attrs.aggregates[this.active_measures[m]];
                     }
                     cell_value.__count__ = attrs.length;
+                    cell_value.__percent__ = 100 * attrs.length / data_length;
                     this.cells[row.id][col.id] = cell_value;
                 }
                 index++;
