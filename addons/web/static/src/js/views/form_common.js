@@ -764,7 +764,7 @@ var AbstractField = FormWidget.extend(FieldInterface, {
      * Used at write time, in particular when the field is required
      */
     is_false: function() {
-        return this.get('value') === false;
+        return this.get('value') === false || _.isUndefined(this.get('value'));
     },
 
     /**
