@@ -101,7 +101,7 @@ var PivotView = View.extend({
         });
         if ((!this.active_measures.length) || this.fields_view.arch.attrs.display_quantity) {
             this.active_measures.push('__count__');
-            this.active_measures.push('__percent__');
+            //this.active_measures.push('__percent__');
         }
 
         return $.when(fields_def, xlwt_def, this._super()).then(function (fields) {
