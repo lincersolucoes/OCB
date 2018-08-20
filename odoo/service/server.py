@@ -362,7 +362,7 @@ class GeventServer(CommonServer):
 
     def start(self):
         import gevent
-        from gevent.wsgi import WSGIServer
+        from gevent.pywsgi import WSGIServer
 
         # Set process memory limit as an extra safeguard
         _, hard = resource.getrlimit(resource.RLIMIT_AS)
