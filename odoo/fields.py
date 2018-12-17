@@ -1151,7 +1151,7 @@ class Float(Field):
     type = 'float'
     _slots = {
         '_digits': None,                # digits argument passed to class initializer
-        'group_operator': 'avg',
+        'group_operator': 'sum',
     }
 
     def __init__(self, string=Default, digits=Default, **kwargs):
